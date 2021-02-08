@@ -16,12 +16,12 @@ include /home/ecegrid/a/ece337/Course_Prod/course_make_vars
 # (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-COMPONENT_FILES	:= 
+COMPONENT_FILES	:= adder_1bit.sv adder_nbit.sv
 
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-TOP_LEVEL_FILE	:= 
+TOP_LEVEL_FILE	:= adder_16bit.sv
 
 # Specify the filepath of the test bench you want to use (ie. tb_top_level.sv)
 # (do not include the source folder in the name)
@@ -350,6 +350,26 @@ report_power -hier >> reports/$(MOD_NAME).rep
 
 # Step 5: Output final VHDL and Verilog files
 write_file -format verilog -hierarchy -output "mapped/$(MOD_NAME).v"
+
+# Second Compilation Run. Repeat Step2-5
+# Step 2: Set design constraints
+# Uncomment below to set timing, area, power, etc. constraints
+set_max_delay 6 -from "b[0]" -to "sum[15]"
+# set_max_area <area>
+# set_max_total_power <power> mW
+#$(if $(and $(CLOCK_NAME), $(CLOCK_PERIOD)), create_clock "$(CLOCK_NAME)" -name "$(CLOCK_NAME)" -period $(CLOCK_PERIOD))
+
+# Step 3: Compile the design
+set_structure true -design $(MOD_NAME) -boolean true -boolean_effort medium
+compile -map_effort medium
+
+# Step 4: Output reports
+report_timing -path full -delay max -max_paths 1 -nworst 1 > reports/$(MOD_NAME)_1.rep
+report_area >> reports/$(MOD_NAME)_1.rep
+report_power -hier >> reports/$(MOD_NAME)_1.rep
+
+# Step 5: Output final VHDL and Verilog files
+write_file -format verilog -hierarchy -output "mapped/$(MOD_NAME)_1.v"
 echo "\nScript Done\n"
 echo "\nChecking Design\n"
 check_design
