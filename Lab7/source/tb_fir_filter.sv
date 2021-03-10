@@ -251,7 +251,7 @@ module tb_fir_filter();
 	initial
 	begin // TODO: Add more standard test cases here
 		// Populate the test vector array to use
-		tb_test_vectors = new[2];
+		tb_test_vectors = new[3];
 		// Test case 0
 		tb_test_vectors[0].coeffs		= {{COEFF_5}, {COEFF1}, {COEFF1}, {COEFF_5}};
 		tb_test_vectors[0].samples	= {16'd100, 16'd100, 16'd100, 16'd100};
@@ -262,6 +262,11 @@ module tb_fir_filter();
 		tb_test_vectors[1].samples	= {16'd1000, 16'd1000, 16'd100, 16'd100};
 		tb_test_vectors[1].results	= {16'd450, 16'd500, 16'd50 ,16'd50};
 		tb_test_vectors[1].errors		= {1'b0, 1'b0, 1'b0, 1'b0};
+		// Test case 2
+		tb_test_vectors[2].coeffs		= tb_test_vectors[0].coeffs;
+		tb_test_vectors[2].samples	= {16'd1000, 16'd65535, 16'd50, 16'd1000};
+		tb_test_vectors[2].results	= {16'd450, 16'd33717, 16'd975 ,16'd500};
+		tb_test_vectors[2].errors		= {1'b1, 1'b0, 1'b0, 1'b0};
 	end
 	
 	// Test bench process
@@ -276,7 +281,7 @@ module tb_fir_filter();
 		tb_coeff = COEFF0;
 		
 		// Wait for some time before starting test cases
-		#(1ns);
+		#(1ns); 
 		
 		// Power on reset (just inspect on waves)
 		reset_dut;
@@ -289,5 +294,7 @@ module tb_fir_filter();
 		
 		// TODO: Add non standard test cases here
 		
+
+		$stop;
 	end
 endmodule

@@ -1,0 +1,28 @@
+Section 7.1: Design Questions
+1. Q: What is the minimum amount of time that dat_ready must remain asserted to ensure correct operation?
+ANS: 
+The minimum amount of time is 2 clock cycle, one is from IDLE to STORE, the other is from STORE to ZERO. We are not sure whether the signal will goes to EIDLE or it will start the operation until the Zero state.
+
+2. Q: What is the minimum amount of time, in clock cycles, that data must remain valid after data_ready is asserted in order to ensure correct operation?
+ANS: 
+The minimum amount of time is 3 clock cycle. Two  at sync and 1 at store.
+
+Section 7.2: Verilog File IO Demo
+1. Q: How are the image files different? Does this make sense given the filter design built in the lab? Why or why not?
+ANS: 
+The filter_1.bmp image seems to be darker than the test_1.bmp. Also, it seems like the most dense part in the test_1.bmp will turn in to a black color (the middle of the white portion). For other part, it separate the test_1.bmp to red, blue and green with some white lines remain. This makes sense because the filter uses different coefficient to filter out the colar. This is similar to a high-pass filter. 
+
+2. Q: What is the general syntax for each of the file IO functions used in the provided test bench(tb_fir_filter_image.sv)?
+ANS: 
+This is similar to C programming. 
+To open up a file: $fopen(filename, mode)
+To read a file: $fscanf(pointer to a FILE object,format, format, data )
+To check the location of the given stream: $ftell(filename)
+To set the position of the stream to a given offset: $fseek(stream, offset, where)
+To write the result to an output file: $fwrite(filename1, specifier, data)
+To close a file: $fclose(filename)
+
+3. Q: What are the different format specifiers available for use in file functions like $fscanf(...)?
+ANS:
+%s, %i, %c, %d, %b, %u, %o, %f, %a, %e, %g 
+
