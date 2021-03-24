@@ -394,8 +394,73 @@ initial begin
 
   // Student TODO: Add more test cases here
   // Update Navigation Info
-  tb_test_case     = "Need More Tests!";
+  ////////////////////////////////////////////////////
+  /////////////////////DATA BUFFER///////////////////
+  tb_test_case     = "DATA BUFFER";
   tb_test_case_num = tb_test_case_num + 1;
+
+  // Reset the DUT to isolate from prior to isolate from prior test case
+  reset_dut();
+  
+  // Enque the needed transactions (Overall period of 1000 clocks)
+  tb_rx_data = 8'b01010101;
+  // Enqueue the CR Writes
+  enqueue_transaction(1'b1, 1'b0, ADDR_RX_DATA, 8'b01010101, 1'b0);
+  
+  // Run the write transactions via the model
+  execute_transactions(1);
+
+  // Check the DUT outputs
+  tb_expected_data_read  = 1'b0;
+  tb_expected_bit_period = RESET_BIT_PERIOD;
+  tb_expected_data_size  = RESET_DATA_SIZE;
+  check_outputs("after attempting to get the databuffer");
+
+  ////////////////////////////////////////////////////
+  /////////////////////Status Register///////////////////
+  tb_test_case     = "STATUS REGISTER";
+  tb_test_case_num = tb_test_case_num + 1;
+
+  // Reset the DUT to isolate from prior to isolate from prior test case
+  reset_dut();
+  
+  // Enque the needed transactions (Overall period of 1000 clocks)
+  tb_data_ready = 1'b1;
+  // Enqueue the CR Writes
+  enqueue_transaction(1'b1, 1'b0, ADDR_DATA_SR, 1'b1, 1'b0);
+  
+  // Run the write transactions via the model
+  execute_transactions(1);
+
+  // Check the DUT outputs
+  tb_expected_data_read  = 1'b0;
+  tb_expected_bit_period = RESET_BIT_PERIOD;
+  tb_expected_data_size  = RESET_DATA_SIZE;
+  check_outputs("after attempting to get the status register");
+
+  ////////////////////////////////////////////////////
+  /////////////////////error Register///////////////////
+  tb_test_case     = "ERROR REGISTER";
+  tb_test_case_num = tb_test_case_num + 1;
+
+  // Reset the DUT to isolate from prior to isolate from prior test case
+  reset_dut();
+  
+  // Enque the needed transactions (Overall period of 1000 clocks)
+  tb_overrun_error = 1'b1;
+  tb_framing_error = 1'b1;
+  // Enqueue the CR Writes
+  enqueue_transaction(1'b1, 1'b0, ADDR_ERROR_SR, 8'b00000011, 1'b0);
+  
+  // Run the write transactions via the model
+  execute_transactions(1);
+
+  // Check the DUT outputs
+  tb_expected_data_read  = 1'b0;
+  tb_expected_bit_period = RESET_BIT_PERIOD;
+  tb_expected_data_size  = RESET_DATA_SIZE;
+  check_outputs("after attempting to get the status register");
+  $stop;
 
 end
 

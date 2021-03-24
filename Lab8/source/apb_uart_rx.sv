@@ -6,7 +6,7 @@
 // Version:     1.0  Initial Design Entry
 // Description: apb_uart_rx.sv
 
-module apb_uart_rx (input logic clk, n_rst, serial_in, psel, penable, pwrite input logic [2:0] paddr, input logic [7:0] pwdata
+module apb_uart_rx (input logic clk, n_rst, serial_in, psel, penable, pwrite, input logic [2:0] paddr, input logic [7:0] pwdata,
 output logic [7:0]prdata, output logic pslverr);
 
 logic [3:0] data_size;

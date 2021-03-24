@@ -25,7 +25,7 @@ logic [7:0]packet_data;
 logic enable_timer;
 logic packet_done;
 
-sr_9bit s9 (.clk(clk),.n_rst(n_rst),.serial_in(serial_in),.shift_strobe(shift_strobe),.packet_data(packet_data),.stop_bit(stop_bit));
+sr_9bit s9 (.clk(clk),.n_rst(n_rst),.serial_in(serial_in),.shift_strobe(shift_strobe),.packet_data(packet_data),.stop_bit(stop_bit), .data_size(data_size));
 
 start_bit_det start (.clk(clk),.n_rst(n_rst),.serial_in(serial_in),.start_bit_detected(start_bit_detected),.new_package_detected(new_bit));
 

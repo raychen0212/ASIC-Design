@@ -17,7 +17,7 @@ logic [3:0]bit_count;
 flex_counter #(.NUM_CNT_BITS(14)) clk_divider (.clk(clk),.n_rst(n_rst), .count_enable(enable_timer), .clear(packet_done),.rollover_val(bit_period),
 .count_out(clk_count),.rollover_flag(shift_enable));
 
-flex_counter #(.NUM_CNT_BITS(4)) bit_counter(.clk(clk),.n_rst(n_rst), .count_enable(shift_enable), .clear(packet_done),.rollover_val(data_size+1),
+flex_counter #(.NUM_CNT_BITS(4)) bit_counter(.clk(clk),.n_rst(n_rst), .count_enable(shift_enable), .clear(packet_done),.rollover_val(data_size+1'b1),
 .count_out(bit_count),.rollover_flag(packet_done));
 
 endmodule

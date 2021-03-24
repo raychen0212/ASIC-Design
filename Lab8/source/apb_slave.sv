@@ -14,13 +14,10 @@
 module apb_slave (input logic clk, n_rst, data_ready, overrun_error, framing_error, psel, penable, pwrite, input logic [2:0] paddr, input logic [7:0] rx_data, input logic [7:0]pwdata,
 output logic data_read, pslverr, output logic [3:0] data_size, output logic [7:0] prdata, output logic [13:0] bit_period);
 
-reg [6:0][7:0]reg_map;
-reg [6:0][7:0]nxt_reg_map;
+logic [6:0][7:0]reg_map;
+logic [6:0][7:0]nxt_reg_map;
 logic write_sel;
 logic read_sel;
-//typedef enum bit[2:0] {ERROR, IDLE, READ, WRITE} stateType;
-//stateType state;
-//stateType nxt_state;
 always_ff @( posedge clk, negedge n_rst) begin : INPUT_LOGIC
     if (n_rst == 0) begin
         reg_map[0] <= '0;
@@ -40,29 +37,34 @@ always_comb begin: NEXTSTATE_LOGIC
     pslverr = 0;
     read_sel = 0;
     write_sel = 0;
-    if (psel && penable && pwrite) begin
+    if (psel && pwrite) begin
         if (paddr == 3'd2 || paddr == 3'd3 || paddr == 3'd4)begin
             write_sel = 1;
         end
         else begin
-            write_sel = 0;
-            pslverr = 1;
+            if (penable == 1) begin
+                write_sel = 0;
+                pslverr = 1;
+            end
         end
     end
-    else if (psel && penable && !pwrite)begin
+    else if (psel && !pwrite)begin
         if (paddr == 3'd0 || paddr == 3'd1 || paddr == 3'd2 || paddr == 3'd3 || paddr == 3'd4 || paddr == 3'd6)begin
             read_sel = 1;
         end
         else begin
-            read_sel = 0;
-            pslverr = 1;
+            if (penable == 1) begin
+                read_sel = 0;
+                pslverr = 1;
+            end
         end
     end
 end
 
 always_comb begin : ERROR
     nxt_reg_map = reg_map;
-    data_read = 0;
+    data_read = 1'b0;
+    prdata = '0;
     if (write_sel == 1)
         nxt_reg_map[paddr] = pwdata;
     else if (read_sel == 1) begin
